@@ -88,11 +88,12 @@ You have to assemble the source with [fox32asm](https://github.com/fox32-arch/fo
 
 [Link.](https://codeguessing.gay/70/#7)
 
-Boring one of many js submissions but it does say to "upload the scripts you used to finish the game with no further changes". I think it's roughly optimal without using multiplexing
+One of many boring js submissions but it does say to "upload the scripts you used to finish the game with no further changes". I think it's roughly optimal without using multiplexing
 
 ## round #62 (implement a text editor)
 
 [Link.](https://codeguessing.gay/62/#12)
+
 Behold txt.k world's best bad text editor. The code is beautiful and it supports all the keybinds you already expect. It has text selection and indenting support and saving (it closes and opens the file again) and Ctrl+F (which is really just "find next"). It uses an awful awk hack to make it run in raw mode.
 
 `simple. usable. extensible. pick all three.` With Ctrl+E it can run arbitrary code. this is a Feature, actually. here are some examples of things you can do,
@@ -157,8 +158,195 @@ I am weirdly proud of this one. Unlike most of my submissions this one is well c
 
 ## round #52 (generate the thue-morse sequence)
 
-As first uploaded this four-byte file was automatically detected as Big5 reading `氫彃` ("hydrogen shoot")
+[Link.](https://codeguessing.gay/52/#10)
+
+As first uploaded this four-byte file was automatically detected as Big5 reading `氫彃` ("hydrogen shoot"). Of course, in reality it's `ḶB§Ḃ` ("lowered range, binary, sum each, bit") in the [Jelly codepage](https://github.com/DennisMitchell/jellylanguage/wiki/Atoms).
+
+![Comments of #52](52/comments.png)
+
+How did "owo" know?
 
 ## round #51 (do the impossible)
 
-This one features length calculations in 24 languages, with Statistical Analysis on top.
+[Link.](https://codeguessing.gay/51/#3)
+This one features length calculations in 24 languages, with Statistical Analysis on top. Indeed! Mean, standard deviation, median, mode. Not just 24 random languages, just some i thought guessers would like. I strategically chose those languages: most say the number of bytes or unicode codepoints, JS because it does UTF-16, Elixir because I know it checks for graphemes, a dumb brainfuck implementation that lets the result overflow. PHP spins up a server and then returns the HTTP_CONTENT_LENGTH header. A shell script `run` and a `shell.nix` glue the whole thing together. The result is kind of chaotic.
+
+```
+[nix-shell:~/pp/haskell/cash/.vscode/cg]$ ./run meow×ä🐝
++ jq -R '[0,0,0,.]'
+++ head -c 9 length.apls
++ curl -vL https://tryapl.org/Exec --json @-
++ jq -r '.[-1][0]'
+++ echo meow×ä🐝
+++ sed -E 's/'\''/'\'''\''/'
++ echo '⎕←≢'\''meow×ä🐝'\'''
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Host tryapl.org:443 was resolved.
+* IPv6: (none)
+* IPv4: 81.94.205.37
+*   Trying 81.94.205.37:443...
+* Connected to tryapl.org (81.94.205.37) port 443
+* ALPN: curl offers h2,http/1.1
+} [5 bytes data]
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+} [512 bytes data]
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+{ [122 bytes data]
+* TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+{ [15 bytes data]
+* TLSv1.3 (IN), TLS handshake, Certificate (11):
+{ [4280 bytes data]
+* TLSv1.3 (IN), TLS handshake, CERT verify (15):
+{ [520 bytes data]
+* TLSv1.3 (IN), TLS handshake, Finished (20):
+{ [52 bytes data]
+* TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+} [1 bytes data]
+* TLSv1.3 (OUT), TLS handshake, Finished (20):
+} [52 bytes data]
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384 / X25519 / RSASSA-PSS
+* ALPN: server accepted h2
+* Server certificate:
+*  subject: CN=tryapl.gos.dyalog.com
+*  start date: Dec 13 14:01:59 2023 GMT
+*  expire date: Mar 12 14:01:58 2024 GMT
+*  subjectAltName: host "tryapl.org" matched cert's "tryapl.org"
+*  issuer: C=US; O=Let's Encrypt; CN=R3
+*  SSL certificate verify ok.
+*   Certificate level 0: Public key type RSA (4096/152 Bits/secBits), signed using sha256WithRSAEncryption
+*   Certificate level 1: Public key type RSA (2048/112 Bits/secBits), signed using sha256WithRSAEncryption
+*   Certificate level 2: Public key type RSA (4096/152 Bits/secBits), signed using sha256WithRSAEncryption
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+{ [146 bytes data]
+* using HTTP/2
+* [HTTP/2] [1] OPENED stream for https://tryapl.org/Exec
+* [HTTP/2] [1] [:method: POST]
+* [HTTP/2] [1] [:scheme: https]
+* [HTTP/2] [1] [:authority: tryapl.org]
+* [HTTP/2] [1] [:path: /Exec]
+* [HTTP/2] [1] [user-agent: curl/8.5.0]
+* [HTTP/2] [1] [content-type: application/json]
+* [HTTP/2] [1] [accept: application/json]
+* [HTTP/2] [1] [content-length: 48]
+} [5 bytes data]
+> POST /Exec HTTP/2
+> Host: tryapl.org
+> User-Agent: curl/8.5.0
+> Content-Type: application/json
+> Accept: application/json
+> Content-Length: 48
+> 
+} [48 bytes data]
+< HTTP/2 200 
+< content-type: application/json; charset=utf-8
+< date: Tue, 30 Jan 2024 17:44:36 GMT
+< server: Jarvis 1.14.5
+< content-length: 4576
+< 
+{ [5 bytes data]
+100  4624  100  4576  100    48   9268     97 --:--:-- --:--:-- --:--:--  9379
+* Connection #0 to host tryapl.org left intact
+8
++ awk -E length.awk meow×ä🐝
+8
++ bfc length.b
++ echo meow×ä🐝
++ ./length
+13
++ cbqn length.bqn meow×ä🐝
+8
++ gcc length.c -o length
++ ./length meow×ä🐝
+13
++ sbcl --script length.clisp meow×ä🐝
+8
++ g++ length.cpp -o length
++ ./length meow×ä🐝
+13
++ elixir length.ex meow×ä🐝
+7
++ gforth length.forth meow×ä🐝
+13 
++ go run length.go meow×ä🐝
+13
++ ghc length.hs -o length
+[1 of 2] Compiling Main             ( length.hs, length.o )
+[2 of 2] Linking length [Objects changed]
++ ./length meow×ä🐝
+8
++ java length.java meow×ä🐝
+9
++ node length.js meow×ä🐝
+9
++ k length.k meow×ä🐝
+13
++ lua length.lua meow×ä🐝
+13
++ perl length.perl meow×ä🐝
+13
++ sleep 1
++ php -S localhost:8000
+[Tue Jan 30 18:45:06 2024] PHP 8.3.2 Development Server (http://localhost:8000) started
++ curl -v http://localhost:8000/length.php -d meow×ä🐝
+* Host localhost:8000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying [::1]:8000...
+* Connected to localhost (::1) port 8000
+> POST /length.php HTTP/1.1
+> Host: localhost:8000
+> User-Agent: curl/8.5.0
+> Accept: */*
+> Content-Length: 13
+> Content-Type: application/x-www-form-urlencoded
+> 
+} [13 bytes data]
+[Tue Jan 30 18:45:07 2024] [::1]:45272 Accepted
+< HTTP/1.1 200 OK
+< Host: localhost:8000
+< Date: Tue, 30 Jan 2024 17:45:07 GMT
+< Connection: close
+< X-Powered-By: PHP/8.3.2
+< Content-type: text/html; charset=UTF-8
+< 
+{ [3 bytes data]
+[Tue Jan 30 18:45:07 2024] [::1]:45272 [200]: POST /length.php
+[Tue Jan 30 18:45:07 2024] [::1]:45272 Closing
+100    16    0     3  100    13    118    513 --:--:-- --:--:-- --:--:--   640
+* Closing connection
+13
++ kill 36301
++ python3 length.py meow×ä🐝
+8
++ ruby length.rb meow×ä🐝
+8
++ rustc length.rs -o length
++ ./length meow×ä🐝
+13
++ scala length.scala meow×ä🐝
+9
++ sh length.sh meow×ä🐝
+8
++ zig run length.zig -- meow×ä🐝
+13
++ rm length.hi length.o length
+---
+data: 8 8 13 8 13 8 13 7 13  13 8 9 9 13 13 13 13 8 8 13 9 8 13 
+entries       μ      σ  median  mode
+     23  10.478  3.625       9  13
+```
+That space in the middle is because forth `.` does that by default. Try giving it strange or invalid encodings. Much fun to be had.
+
+## round #50 (implement autocomplete)
+[Link.](https://codeguessing.gay/50/#1)
+
+markov.k is an updated version of a file that I had lying around. It's a pretty straightforward [Markov chain](https://en.wikipedia.org/wiki/Markov_chain) using [ngn/k](https://codeberg.org/ngn/k) dictionaries. It's also two lines long
+
+## round #49 (implement a lisp)
+[Link.](https://codeguessing.gay/49/#3)
+
+I'm a little surprised I was the only one that did this
