@@ -1,0 +1,10 @@
+#!/bin/sh
+
+fox32asm huffwoman.asm huffwomn.fxf
+
+$RYFS -l Huffwomn create huffwoman.img
+$RYFS add huffwoman.img huffwomn.fxf
+echo -n "this is an example of a huffman tree" > input.txt
+$RYFS add huffwoman.img input.txt
+
+fox32 --disk fox32os.img --disk huffwoman.img

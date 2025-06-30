@@ -1,0 +1,182 @@
+( devices )
+|00 @System [ &vector $2 &pad $6 &r $2 &g $2 &b $2 &debug $1 ]
+|10 @Console [ &vector $2 &read $1 &pad $4 &type $1 &write $1 &error $1 ]
+|20 @Screen [ &vector $2 &width $2 &height $2 &pad $2 &x $2 &y $2 &addr $2 &pixel $1 &sprite $1 ]
+|90 @Mouse [ &vector $2 &x $2 &y $2 &state $1 &pad $7 &scrolly $1 ]
+
+|00 @pressed $1 @shape $2
+%BLIT { .Screen/y DEO2 .Screen/x DEO2 #42 .Screen/pixel DEO }
+
+%ABS2 { DUP2k #1f SFT2 MUL2 SUB2 }
+%NOT { #01 EOR }
+%NEG { #ff MUL }
+%NEG2 { #ffff MUL2 }
+
+%DBG { #01 .System/debug DEO }
+%ISNEG2 { #0f SFT2 NIP }
+%ISPOS2 { POP #80 LTH }
+%DBL2 { #10 SFT2 }
+%SGN2 { #1f SFT2 #0001 SWP2 SUB2 }
+
+|0100
+	#0f7f .System/r DEO2
+	#0fd6 .System/g DEO2
+	#0fb2 .System/b DEO2
+	( .Screen/width DEO2 )
+	#00 .pressed STZ
+	;shapes .shape STZ2
+	
+	;on-mouse .Mouse/vector DEO2
+
+@on-mouse ( -> )
+	#0000 DUP2 .Screen/y DEO2 .Screen/x DEO2 #c0 .Screen/pixel DEO
+	.Mouse/state DEI #01 AND DUP NOT ?&nopress 
+		.pressed LDZ ?&nopress
+		.shape LDZ2 INC2 INC2 INC2 LDA2k
+		#0000 NEQ2 ?&noreset POP2 ;shapes &noreset
+		.shape STZ2
+	&nopress .pressed STZ
+	.Mouse/x DEI2 #20 SFT2 display
+	BRK
+
+@smul21 ( x* y* -- x.y* )
+	STH2 DUP2 SGN2 DUP2 ROT2 MUL2 ( xs* |x|* | y* )
+	STH2r DUP2 SGN2 DUP2 ROT2 MUL2 ( xs* |x|* ys* |y|* )
+	ROT2 SWP2 mul21 [ STH2 MUL2 STH2r ] MUL2 ( ys.xs.|x|.|y|* ) 
+JMP2r
+
+@mul21 ( x* y* -- x.y* )
+	( OVR #80 LTH  ?&pos NEG2 mul21 JMP2r &pos )
+	ROT #00 SWP ( OVR ,&meow STR ) OVR2 MUL2 ( xh y* xl.y* )
+	POP STH ( xh y* | xl.y>>8 )
+	ROT #00 SWP  [ MUL2 #00 STHr ] ADD2
+JMP2r
+%LTS2 { #8000 STH2k ADD2 SWP2 STH2r ADD2 GTH2 }
+%GTS2 { #8000 STH2k ADD2 SWP2 STH2r ADD2 LTH2 }
+%PI/2 { #0192 } %PI { #0324 } %2.PI { #0648 } %nPI/2 { #fe6d }
+( 0x1234 0x5678 )
+@cos ( x* -- cos* )
+	DUP2 nPI/2 GTS2 ?&noadd 2.PI ADD2 !cos &noadd
+	DUP2 PI/2 LTS2 ?&noneg PI SUB2 /noadd NEG2 JMP2r &noneg
+	ABS2 DUP2 mul21 #01 SFT2 ( x^2/2* )
+	DUP2k mul21 #0028 ( ~1/6 ) mul21 ( x^2/2* x^4/24* )
+	SUB2 #0100 SWP2 SUB2
+JMP2r
+@sin ( x* -- cos* ) PI/2 SUB2 cos JMP2r
+
+@rotate ( x* y* phi* -- x'* y'* )
+	DUP2 sin STH2 cos STH2 SWP2k  ( x y y x | sin cos )
+	STH2kr SWP2r smul21 SWP2 STH2kr smul21 ADD2 ( x y y.cos+x.sin | cos sin )
+	STH2r STH2r ROT2 STH2 ROT2 ( x cos sin y | y.cos+x.sin )
+	smul21 STH2 smul21 STH2r SWP2 SUB2 ( x.cos-y.sin | y.cos+x.sin )
+	STH2r
+JMP2r
+
+%V3 { #01bb }
+@project ( x* y* z* -- x'* y'* )
+	STH2 
+	OVR2 V3 smul21 OVR2 V3 smul21 SUB2 ( x* y* V3.x-V3.y | z* )
+	ROT2 ROT2 ADD2 STH2r DBL2 SUB2 ( V3.x-V3.y x+y-2.z )
+JMP2r
+@display ( phi* -- )
+	STH2 .shape LDZ2 LDA2k STH2
+	INC2 INC2 LDA #00 &until LTHk ?&end
+		STH2r point STH2kr SWP2 STH2 ( x1* y1* phi* | phi* addr* )
+		transform ( x1* y1* addr* | phi* )
+		STH2r point STH2kr SWP2 STH2 ( x1* x2* y1* y2* phi* | phi* addr* )
+		transform ( x1* x2* y1* y2* | phi* addr* )
+		Bresenham/draw
+	INC !&until &end
+	POP2 POP2r POP2r
+	JMP2r
+@point ( addr* -- x* y* z* addr* )
+	%read { LDAk #00 #50 SFT2 SWP #0020 SUB2 SWP2 INC2 }  read read read JMP2r
+@transform ( x* y* z* phi* -- x* y* )
+	SWP2 STH2 ( x* y* phi* | z* ) rotate STH2r project
+	.Screen/height DEI2 #01 SFT2 ADD2
+	[ STH2 .Screen/width DEI2 #01 SFT2 ADD2 STH2r ]
+JMP2r
+
+@shapes =&shape1 11 =&shape2 0b 00 00 ( add more! )
+	&shape1
+		[
+		00 00 00  02 00 00
+		02 00 00  02 02 00
+		02 02 00  00 02 00
+		00 02 00  00 00 00 ]
+		[
+		00 00 00  00 00 02
+		00 00 02  01 00 02
+		01 00 02  01 00 01
+		01 00 01  02 00 01
+		02 00 01  02 00 00 ]
+		[
+		00 02 00  00 02 02
+		00 02 02  01 02 02
+		01 02 02  01 02 01
+		01 02 01  02 02 01
+		02 02 01  02 02 00 ]
+		[
+		02 00 01  02 02 01
+		01 00 01  01 02 01
+		01 00 02  01 02 02
+		00 00 02  00 02 02 ]
+	&shape2
+		[
+		01 01 00  00 01 01
+		01 01 00  02 01 01
+		01 01 00  01 00 01
+		01 01 00  01 02 01
+		01 01 02  00 01 01
+		01 01 02  02 01 01
+		01 01 02  01 00 01
+		01 01 02  01 02 01 ]
+		[
+		01 00 01  00 01 01
+		01 02 01  00 01 01
+		01 00 01  02 01 01
+		01 02 01  02 01 01 ]
+
+@Bresenham
+&draw ( x0* y0* x1* y1* -> )
+	STH2 SWP2 STH2 SWP2r ( x0* x1* | y0* y1* )
+	SWP2 OVR2 SWP2r OVR2r ( x1* x0* x1* | y1* y0* y1* )
+	OVR2 SUB2 OVR2r SUB2r ( x1* x0* dx* | y1* y0* dy* )
+	( flip points if appropriate )
+	STH2kr OVR2 ADD2 ISPOS2 ?&noflip
+		NEG2 ROT2 SWP2 ( x1* x0* dx* -> x0* x1* -dx* )
+		STH2r NEG2 STH2 ROT2r SWP2r ( y1* y0* dy* -> y0* y1* -dy* )
+	&noflip
+	LIT POPk ,&blitswap STR
+	STH2kr ABS2 OVR2 SUB2 ISNEG2 ?&noswap
+		( x1* x0* dx* | y1* y0* dy* )
+		;&dy STA2 STH2r ,&dx STR2 NIP2 ( x0* | y1* y0* )
+		STH2r STH2r ROT2 STH2 SWP2 ( y1* y0* | x0* )
+		LIT SWP2 ,&blitswap STR 
+	!&stopswap &noswap
+		( x1* x0* dx* | y1* y0* dy* )
+		,&dx STR2 STH2r ,&dy STR2 NIP2r ( x1* x0* | y0* )
+	&stopswap
+	( x1* x0* | y0* ) 
+	,&dy LDR2 DUP2
+	#1f SFT2 ( dy>>16<<1 = 2(dy<0) )
+	#0001 SWP2 SUB2 ( dy<0: 1-2 = -1; dy>=0: 1-0 = 1 )
+	DUP2 ,&dysgn STR2 ( sign of dy.  1 going up, -1 going down )
+	MUL2 DUP2 ,&dy STR2 ( dy:=abs(dy) )
+	DBL2 ,&dx LDR2 SUB2 ,&diff STR2 ( diff := 2dy - dx.  x0* | y0* )
+	( loop is about to start!  x1* x* | y* ) 
+	&while LTH2k ( x < x1 ) ?&ent
+		STH2r OVR2 OVR2 &blitswap POPk BLIT ( x* y* )
+		,&diff LDR2 #0001 SUB2 ISNEG2 ?&nosft ( x-1<0 <-> x<=0 most of the time )
+			LIT2 &dysgn $2 ADD2 
+			,&dy LDR2 ,&dx LDR2 SUB2 DBL2 ( x* y* 2(dy-dx) ) !&after
+		&nosft
+			,&dy LDR2 DBL2
+		&after
+		;&diff LDA2k ROT2 ADD2 SWP2 STA2 ( diff := diff+2dy )
+		STH2 INC2 !&while
+	&ent
+	POP2r POP2 POP2 
+JMP2r
+&dx $2 &dy $2 &diff $2
+
