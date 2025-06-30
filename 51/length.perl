@@ -1,0 +1,1 @@
+print length $ARGV[0], "\n";

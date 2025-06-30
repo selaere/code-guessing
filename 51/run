@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+# probabilistic length algorithm
+
+lengths() {
+  set -x
+  echo "$(head -c 9 length.apls)'$(echo "$1" | sed -E "s/'/''/")'" |
+    jq -R '[0,0,0,.]' |
+    curl -vL https://tryapl.org/Exec --json @- |
+    jq -r .[-1][0]
+  awk -E length.awk "$1"
+  bfc length.b && { echo "$1" | ./length; }
+  cbqn length.bqn "$1"
+  gcc length.c -o length && ./length "$1"
+  sbcl --script length.clisp "$1"
+  g++ length.cpp -o length && ./length "$1"
+  elixir length.ex "$1"
+  gforth length.forth "$1"
+  go run length.go "$1"
+  ghc length.hs -o length >/dev/stderr && ./length "$1"
+  java length.java "$1"
+  node length.js "$1"
+  k length.k "$1"
+  lua length.lua "$1"
+  perl length.perl "$1"
+  coproc php -S localhost:8000
+  sleep 1
+  curl -v http://localhost:8000/length.php -d "$1"
+  kill $COPROC_PID
+  python3 length.py "$1"
+  ruby length.rb "$1"
+  rustc length.rs -o length && ./length "$1"
+  scala length.scala "$1"
+  sh length.sh "$1"
+  zig run length.zig -- "$1"
+
+  rm length.hi length.o length
+}
+
+lengths "$1" | tee len
+n=$(wc -l <len)
+sort -n len >lens
+entry() { sed $1\!d lens; }
+if [[ $(( n % 2 )) = 1 ]]; then
+  median=$(entry $((n/2)))
+else
+  median=$(dc -e "1k $(entry $((n/2))) $(entry $((n/2+1)))+2/p")
+fi
+sum=0
+while read i; do
+  let sum+=i 
+done <len
+mean=$(dc -e "3k$sum $n/p")
+
+var=0
+while read i; do
+  var=$(dc -e "3k$i $mean-d*$var+p")
+done <lens
+
+stddev=$(dc -e "3k$var $mean/vp")
+
+let mode=-1 bestrun=0 l=-1 run=0
+while read i; do
+  if [[ "$i" = "$l" ]]; then
+    let run++
+    if [[ "$run" -gt "$bestrun" ]]; then
+      let mode=l bestrun=r
+    fi
+  else
+    let r=0 l=i
+  fi
+done <lens
+rm lens
+
+echo ---
+printf "data: "
+tr '
+' ' ' <len
+echo
+
+echo $n $mean $stddev $median $mode | column -R0 -tN "entries,μ,σ,median,mode"

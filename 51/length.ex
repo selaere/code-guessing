@@ -1,0 +1,1 @@
+System.argv() |> hd |> String.length() |> IO.puts()

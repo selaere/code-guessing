@@ -1,0 +1,1 @@
+p(ARGF.argv[0].length)

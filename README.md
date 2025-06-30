@@ -110,5 +110,55 @@ It can also work as a little REPL. You want the numbers from 1 to 100 split into
 
 It is written in [ngn/k](https://codeberg.org/ngn/k), an open source implementation of [K](https://en.wikipedia.org/wiki/K_(programming_language)). The lack of real closures was less annoying than I expected. The awful error messages were more annoying than I expected. The bytecode limit was more annoying than I expected (there's a few functions there that are needlessly split up for that reason. though i guess it makes it more extensible)
 
-The clipboard is not the system clipboard it's just a variable called `clip`. It also does not support non-ascii characters sorry
+The clipboard is not the system clipboard it's just a variable called `clip`. It also has no undo or autosave. It also assumes everything is ASCII sorry
 
+## round #59 (interpret probablistic PricK)
+
+[Link.](https://codeguessing.gay/59/#8)
+
+This one is written in [SWI-Prolog](https://www.swi-prolog.org/). It was also my first time using Prolog. Yippee! It's actually a sensible choice this time. I just implemented the language and then did one single [`bagof`](https://www.swi-prolog.org/pldoc/doc_for?object=bagof/3) and it suddenly goes through all the possible code paths.
+
+You can also just join things with operators it's kind of cool. I ended up using `A+M/O` for state (A=stack, M=memory, O=odds / inverse probability)
+
+I also had to implement my own memory because there didn't seem to be anything exactly like what I wanted in Prolog. It's a strange binary tree (see definition of `g`et/`s`et)
+
+## round #56 (reverse-engineer a regex)
+
+[Link.](https://codeguessing.gay/56/#10)
+
+this one is in Forth, [Gforth](https://net2o.de/gforth/) in specific. It's not quite standard, it uses `rdrop` and `third` and `->here` and `-rot` but those can't be too hard to redefine.
+
+I think it's cute. It writes the string written so far in the dictionary which works pretty well, we just have to move the `here` pointer when we need to backtrack.
+
+Feel free to uppercase all the code yourself
+
+## round #54 (implement 3d rendering)
+
+[Link.](https://codeguessing.gay/54/#3)
+
+I did it! It renders a wire-frame of an orthographic projection of a little Minecraft stair and also an octahedron. It's also not too hard to add custom shapes.
+
+[Try it online!](https://rabbits.srht.site/uxn5/#r=U6APf4AIN6AP1oAKN6APsoAMN4AAgAARoAKlgAExoAEjgJA3oAAAJoAqN4AoN4DAgC4XgJYWgAEcBoABHiAAG4AAECAAFYABMCEhIbSgAAApIAAEIoI8GoAAEYCSNoAgP2AAzwAvJoAfP6AAASQ5JiU6b4gMESUkYAAFLzpvOmwFgAAEJzoCD4AHIDqAAE84bCag_m2ggACvOCRvOCsgAAegBkg4QP_pJqABkoQWYyogAAygAyQ5YP_poP__OmymgB8_OjkmYP-xgAE_pmD_qqAAKGD_pDmgAQAkOWygAZI5YP-obCZg__QvYP-fL6TvZGD_YiTvYP9dOG9vJS8lYP9UL2D_UG8kOW9sLyegAbtg_0OCBic8OSUlOG-AED85bC-AATC0LyEhFIAAiyAAG29gABvvJC9gAD1vYAARgQkYM2ABBgFA_-EiYmJslIAAgFA_BKAAIDkkIZYME2wkL2D_Zm9g_4iAJDaAAT84L4AigQcIb2wCrREDGQsAgAAAAoICAAKAAoMMgwGAGQABgwIEAQEAAQKDAoYwAAGDAgEBAYUKAQIAgCYAAoAvgBcAAIESAACBLAQBAAABAYESgAWAU4BUAQEBgFiABYEXgWuAToQighCDKIBqHC8kL2QkJ2RnJzlnee8nOAKAgAsgAA6g__86JSRvgAZtL2VkgIKAVBPvpoAfPzo5JzmADz8DIAAWoAQiNW-AfjMjb28lLySAJIAxE0AACIBtM2-AazNjgGcyJoAfP6AAASQ5JoAxMzomgFUzgBA_gE0yOYBNM6sgAEFvJyeCgCo3gCg3gEKALheANzKgAAGDXSgRoAAAOIAjMoAeMjmAED9AAAaAFjKAED-gBCS0JTgkNS8hQP-7YiIibA) You can move the mouse left and right to change the view.
+
+![Stair in a black void](54/screenshot1.png)
+![Octahedron in a black void](54/screenshot2.png)
+
+It is implemented in the [Uxntal](https://wiki.xxiivv.com/site/uxntal.html) programming language for the [Varvara](https://wiki.xxiivv.com/site/varvara.html) computer. It runs on [uxn](https://wiki.xxiivv.com/site/uxn.html), a cute little 16-bit stack machine. It's simple enough for it to get embedded into the web.
+
+This also means it's slightly more of a pain to implement certain things. I was using Q7.8 fixed point and the lack of overflow checking or 32 bit multiplication really hurts I don't think it's right at all. I then did cos from a few terms of the Taylor series and then did some dubious math and somehow it worked out
+
+The very first bit that I wrote is the [Bresenham line algorithm](https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm) implementation and it looks so awful. I was juggling way too many values in the stack
+
+## round #53 (parse a box drawing)
+
+[Link.](https://codeguessing.gay/53/#2)
+
+I am weirdly proud of this one. Unlike most of my submissions this one is well commented. It's written in [J](https://www.jsoftware.com/) my behated array language. It isn't that bad actually. I thought this challenge was well suited to an array language: the box detection is, the pathfinding isn't (although the `while.` loop isn't that bad)
+
+## round #52 (generate the thue-morse sequence)
+
+As first uploaded this four-byte file was automatically detected as Big5 reading `氫彃` ("hydrogen shoot")
+
+## round #51 (do the impossible)
+
+This one features length calculations in 24 languages, with Statistical Analysis on top.
