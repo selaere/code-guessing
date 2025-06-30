@@ -106,7 +106,7 @@ Behold txt.k world's best bad text editor. The code is beautiful and it supports
 ```
 It can also work as a little REPL. You want the numbers from 1 to 100 split into lines, you just write `"\n"/$'1+!100` and then Ctrl+E! For things you would do with macros in other editors you can just write functions.
 
-![txt.k running in kitty](image.png)
+![txt.k running in kitty](62/screenshot.png)
 
 It is written in [ngn/k](https://codeberg.org/ngn/k), an open source implementation of [K](https://en.wikipedia.org/wiki/K_(programming_language)). The lack of real closures was less annoying than I expected. The awful error messages were more annoying than I expected. The bytecode limit was more annoying than I expected (there's a few functions there that are needlessly split up for that reason. though i guess it makes it more extensible)
 
