@@ -1,4 +1,4 @@
-[Code guessing](https://codeguessing.gay/info/) is a competition where the participants code and then guess who wrote the code. Of course this kind of pushes you to go out of your comfort zone and try out something you haven't used before and I find that quite fun! And for some reason they keep not guessing me
+[Code guessing](https://codeguessing.gay/info/) is a competition where the participants code and then guess who wrote the code. Of course this kind of pushes you to go out of your comfort zone and try out something you haven't used before and I find that quite fun! And for some reason they keep not guessing me when I use a different language every time
 
 # Every code guessing submission I have written. ever
 This is like an archive of everything I've written with some of my notes. All the files are in this repository or you may read along in <https://codeguessing.gay/stats/taswelll>.
