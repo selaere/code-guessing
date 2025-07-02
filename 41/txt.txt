@@ -1,0 +1,6 @@
+write
+    'input  <- program input
+    '1 1+   <- code
+    run
+
+[[in] [out] [a] [b] ... [z] [0] [1] [2] ...] <ptr>

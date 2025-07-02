@@ -1,0 +1,76 @@
+h w←6 7
+gp←gm←h w⍴0
+positions←{h w←⍺ ⋄ a b←¯1+⍴⍵ ⋄ ,[⍳2](1-⍳w-b)⌽⍤0 99⊢(1-⍳h-a)⊖⍤0 99⊢h w↑⍵}
+gra←⊃⍪/h w∘positions¨(,⍥⊂∘⍉⍨1 4⍴1),(,⍥⊂∘⌽⍨∘.=⍨⍳4)
+movecol←{gp gm←⍵⋄(gp≠gm)(⍉(-⍤⍴↑,∘1)@⍺⍉gm)}
+disp←{'.⌺⎕'[⊃1++⌿⍵]}
+inv←⊃(≠,⍥⊂⊢)/
+threats←{gp gm←⍵ ⋄ ⍺←h w⍴0 ⋄ gra⌿⍨~gra∨/⍤,⍤∧⍤2⊢⍺∨gp≠gm}
+rule←{s←⍺ ⍵⍵⍤2 99⍤99 2⊢b←⊃⍺⍺/⍵⋄(∨/s)∘⌿¨s b}
+
+claimeven←{
+    m←2⌿⍤2⊢(h÷2)w positions 1 1⍴1      ⍝ each possible position
+    m⌿⍨~m∨/⍤,⍤∧⍤2⊢⍵                    ⍝ keep valid ones
+}rule(∨/⍤,(⍉w h⍴2|⍳h)∧∧)               ⍝ threats solved, (⊃⍴b)(⊃⍴⍺)≡⍴x
+baseinverse←{(,∘.<⍨⍳w)⌿,[⍳2]+⍤99 2⍤2 99⍨⊢ 1 3 2⍉(∘.=⍨⍳w)∘.×⍤1(2</,∘1)⍉⍵}rule(2=+/⍤,⍤∧)
+vertical←{
+    m←(¯1⊖h↑2⌿⊢)⍤2⊢(¯1+h÷2)w positions 1 1⍴1
+    m⌿⍨~m∨/⍤,⍤∧⍤2⊢⍵
+}rule(2=+/⍤,⍤∧)
+aftereven←{
+    m←((-h)↑2|⍳h-2)⍀⍤2⊢(¯1+h÷2)w positions 1 4⍴1
+    ⊖⍤(∨⍀⍤⊖⍵<⊢)⍤2⊢m⌿⍨(⍺∘∧⍱⍥(∨/,)⍵∧¯1⊖⍵<⊢)⍤2⊢m
+}rule(⊢≡⍥(∨⌿)∧)
+table ←⊂1
+table,←⊂1 1
+table,←⊂1 1 1
+table,←⊂1 1 1  3
+table,←⊂2 1 1 12  4
+table,←⊂2 1 1 12  4  4
+table,←⊂1 1 1  1 12 12 1
+table,←⊂1 1 1  3 23 12 1 3
+table,←⊂1 1 1  3 23 12 1 3 3
+table ←(⊢⌈⍉)↑table
+pairable←{a b←⍵
+     ⍺=1:∧/,a⍲b
+     ⍺=3:∧/a(∧/⍤⍲∨≡⍤1)⍥⍉b
+     ⍺=13:(pairable∘1∧pairable∘3)a b 
+}
+eval←{⍺←h w⍴0
+    rules←{(⍺ claimeven ⍵)(⍺ baseinverse ⍵)(⍺ vertical ⍵)(⍺ aftereven ⍵)}
+    slvs sqrs typs←(⍪⌿,∘⊂∘⍸(≢¨⊢/))↑⍺(threats rules⊢)⍵
+    slvs sqrs typs←(~⍺∨/⍤,⍤∧⍤2⊢sqrs)∘⌿¨slvs sqrs typs
+    0=≢slvs:0
+    conf←~(∘.(⌷∘table⍤,)⍨typs)pairable¨(⊂,⍥⊂)⍤2 99⍤99 2⍨sqrs
+    conf thing slvs
+}
+thing←{⎕←⍴¨⍺ ⍵  ⍝ ⍺:CONFlict(rules×rules) ⍵:SoLVeS(rules×threats)
+    0=⊢/⍴⍵:1          ⍝ no threats
+    ~∨/m←⍵[;⊃⍋+⌿⍵]:0  ⍝ m: mask of rules that solve hardest threat
+    r t←~(∨⌿m∘⌿)¨⍺ ⍵  ⍝ remove rules/threats solved by m 
+    (r/⍺)∇⍥(r∘⌿)t/⍵
+}
+oddthreat←{
+    t←threats inv (gp gm←⍵)
+    u←t⌿⍨3=t+/⍤,⍤∧⍤2⊢gp≠gm
+    ⍝ unsure why i need this, copied from somewhere else
+    btm←(-⍤⍴↑⍪∘0)⊖∨⍀⊖∨⌿(2<⌿0∘⍪)⍤2 threats ⍵
+    ⊖∨⍀⊖∨⌿btm<⍤2⊢(2<⌿1⍪⍨gm)<⍤2⊢(⍉w h⍴2|⍳h)<⍤2⊢u>⍤2⊢gp≠gm
+}
+eval2←{≠/,2⊃⍵: {∨/,ot←oddthreat⍵:ot eval⍵⋄0}⍵⋄ -eval⍵}
+ab←{a b←⍺
+    0≠v←eval2 ⍵:v
+    moves←(movecol∘⍵¨⍳w)~⊂inv ⍵
+    ≠/,2⊃⍵:¯1 a{v a←⍺
+        0=≢⍵:v
+        b<u←v⌈a b ab⊃⍵:u
+        u(u⌈a)∇ 1↓⍵
+    }moves
+    1 b{v b←⍺
+        0=≢⍵:v
+        b<u←v⌊a b ab⊃⍵:u
+        u(u⌊b)∇ 1↓⍵
+    }moves
+}
+
+{⎕←⍞⊢?7⋄∇0}0

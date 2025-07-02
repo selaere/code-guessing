@@ -350,3 +350,86 @@ markov.k is an updated version of a file that I had lying around. It's a pretty 
 [Link.](https://codeguessing.gay/49/#3)
 
 I'm a little surprised I was the only one that did this
+
+## round #45 (play connect four)
+[Link.](https://codeguessing.gay/42/#1)
+
+This entry is written in [Dyalog APL](https://dyalog.com/). It has a bunch of stuff on top and then at the very end:
+`{⎕←⍞⊢?7⋄∇0}0` meaning "wait for input and then print a random number from 1 to 7". No one seemed to notice it.
+
+The rest of the submission is my unfinished approach to implement a game solving algorithm based on Victor Allis [*A Knowledge-based Approach of Connect-Four*](https://rmarcus.info/blog/assets/conn4/thesis.pdf) (1988). There they make a bot called VICTOR that can always(!) win if playing first. I think this was exciting in the 80's.
+
+By spotting certain patterns in the grid you can identify threats or forced wins which can then be used with some search algorithm. The patterns are things that are fun to implement in array languages like "two vertical empty squares where the above is an odd column" (see "claimeven", "baseeven", "oddthreat"). There are also graph adjacency matrices involved and things like that.
+
+I still want to finish it! There's a few rules that I didn't implement and also the whole game tree search thing is completely wrong (I tried to figure out some minimax with alpha-beta pruning but it was way too late). I still think it's a cool idea.
+
+## round #43 (emulate a spirograph)
+[Link.](https://codeguessing.gay/43/#4)
+
+Behold the worst spirograph ever. Written in [X7](https://github.com/LyricLy/x7/tree/legacy) (the Python version). It's super slow and it only draws a few points because I couldn't be bothered to run it for longer, I think it deep copies the stack for every other instruction or something? And I'm keeping a lot of numbers in there. 
+
+It's all held together with a shell script, it first patches the interpreter (one instruction is broken), and then mashes the argument into the source file (X7 has no input) and then converts the output from the [PBM](https://netpbm.sourceforge.net/doc/pbm.html) format into a black and white image for you to stare at.
+
+![A hypotrochoid in black dots](43/screenshot.png)
+
+It has the sine and cosine in the first line (using a Taylor series, if I recall correctly) and then the rest in the second. I think it just calculates what the point would be for evenly spaced angles? I don't care to reverse engineer the math too much. But it works!
+
+## round #42 (implement 2048)
+[Link.](https://codeguessing.gay/42/#1)
+
+Pretty small, pretty straight-forward. It implements 2048 in [Dyalog APL](https://dyalog.com/). I like the `⍉∘⌽⍣⍵` trick to make the cells fall down in each direction. I'll have you know that the whole `>/∘⌽¨(,\` bit is a direct translation of `` <` `` in BQN. I probably could've figured out something better.
+
+## round #41 (implement FALSE)
+[Link.](https://codeguessing.gay/41/#10)
+
+Why not write a weird stack language interpreter in an even weirder stack language? I came across ktye's ["j stack language"](https://ktye.github.io/j.html) in [the zoo](https://ktye.github.io/zoo/index.html#jstack) and I had to do it. It's a strange little thing written in a [stranger little thing](https://github.com/ktye/w/) that compiles to WebAssembly. It even has something to interact with JS canvas but I didn't use it. I had to take it out of its natural habitat and write a wrapper around [wasmtime](https://wasmtime.dev/) to use it in the console (I didn't have to do this) and then a nix flake to get the source (I didn't have to do this).
+
+All of that may distract you from [false.jstack](41/false.jstack) which is where the source actually lives. I don't remember how it works. 
+Hopefully this file I found in the scene of the crime can elucidate it somewhat
+
+```
+[0 n] positive
+[1 n..] quotation
+[2 n] symbol (a-z: variable)
+[3 n..] print to stdout
+
+
+
+code
+stack
+stack pointer
+...
+
+
+at the start of the program we have ( input code -- ... )
+
+init: 
+
+0pquot|__}q[[]],0"",","",,,",,27{do
+```
+Ok not really. A little. Up there is the format for elements. j stack has quotations that are really just arrays that you can run. I wrote "positive" because negative numbers don't work.
+I did provide a file called `txt.txt`:
+Maybe check `txt.txt`?
+```
+write
+    'input  <- program input
+    '1 1+   <- code
+    run
+
+[[in] [out] [a] [b] ... [z] [0] [1] [2] ...] <ptr>
+```
+The line at the end explains how it actually stores everything. It's a long quotation where the first element is the input, the second is the output, then the 26 variables you have, then the stack. After that there's a top of stack pointer because you can't pop from lists so it just decrements that instead.
+
+In the source, lines 8-12 construct the table that it gets the instructions from. `0"""",,,,"",,",` is the shortest way to get a list of 30 zeroes. `pquot` does parsing, `do` executes, `run` sets up the stack and then executes, I think `w` is a while loop of sorts? `oo` is just dup2.
+
+I think the implementation is feature complete. Well of course there's no interactive IO and j stack's integers are 31 bit. It's mostly feature complete, I ran a few programs with it.
+
+## round #39 (implement brain-flak)
+[Link.](https://codeguessing.gay/39/#11)
+
+I found a [parser combinator](https://en.wikipedia.org/wiki/Parser_combinator) library written in [Nix language](https://nix.dev/tutorials/nix-language.html) called [nix-parsec](https://github.com/kanwren/nix-parsec/) and I found it funny, why not, we will make an interpreter in a build system. I also used an [obscure let syntax](https://nixos.wiki/wiki/Nix_Language_Quirks#Old_let_syntax) for no reason. There's not really anything special here other than probably my first time using parser combinators. Maybe I like it better without all the strange Haskell symbols? I haven't decided.
+
+## round #37 (compute digital roots)
+[Link.](https://codeguessing.gay/37/#11)
+
+It's the obvious solution but written in [jq](https://jqlang.org/) for style. Was tragic to find out it's a relatively normal language
