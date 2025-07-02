@@ -1,10 +1,13 @@
-# Every code guessing submission i have made. ever
+[Code guessing](https://codeguessing.gay/info/) is a competition where the participants code and then guess who wrote the code. Of course this kind of pushes you to go out of your comfort zone and try out something you haven't used before and I find that quite fun! And for some reason they keep not guessing me
+
+# Every code guessing submission I have written. ever
+This is like an archive of everything I've written with some of my notes. All the files are in this repository or you may read along in <https://codeguessing.gay/stats/taswelll>.
 
 ## round #77 (circle)
 
 [Link.](https://codeguessing.gay/77/#9)
 
-I, like many of my guessmates interpreted the challenge as "draw a circle". I had a bit of time so i thought about [Atari 2600](https://en.wikipedia.org/wiki/Atari_2600) as a notoriously hard console to draw things on.
+I, like many of my guessmates interpreted the challenge as "draw a circle". I had a bit of time so I thought about [Atari 2600](https://en.wikipedia.org/wiki/Atari_2600) as a notoriously hard console to draw things on.
 
 This submission draws a circle. It does nothing else. None of the controller inputs do anything. You may not move the circle. You may not resize the circle. You may not change the colors of the circle. Just stare at it.
 
@@ -12,7 +15,7 @@ This submission draws a circle. It does nothing else. None of the controller inp
 
 It's more of an ellipse. I tried to correct for the pixel grid being stretched out but it seems I didn't do it right. It also has a bit bulging out the top like an onion. None of those are technical limitations I just didn't bother fixing them.
 
-In 2600 you have to prepare each scan line while the previous one is being drawn, and the processor is pretty slow so this limits you quite a bit. Thankfully all I'm doing is draw a circle which isn't too bad. Though you can't just tell it "please at x=20 light up for 49 clock cycles". We have to get three friends involved: M0, M1, and PF
+In 2600 you have to prepare each scan line while the previous one is being drawn, and the processor is pretty slow so this limits you quite a bit. Thankfully all I'm doing is draw a circle which isn't too bad. Though you can't just tell it "please at x=20 light up for 49 clock cycles". We have to get three friends involved: M0, M1, and PF.
 
 ![Same image as earlier, but the ellipse is colored in different colors. The border of the circle is green on the left side and orange on the right size. The inside is multiple shades of purple, growing in 8 pixel increments.](./77/circle-screenshot3.png)
 
@@ -20,7 +23,7 @@ I decided I wanted my circle to be as high resolution as feasible so I wanted to
 
 Precise pixel positioning of objects is a little bit of an art, you have to write to a register when the beam is in the right position and tweak it afterwards. Thankfully we only have to do that once, to put them both in the center, and then move them horizontally by a few pixels every frame. I didn't think it would just let you move it to the other side of the screen. It does. Yay!
 
-We can fill the inside using another feature, the "playfield", a sort of low resolution background. The playfield has to be symmetric so it's actually important that the circle is in the center (I don't think i did this pixel perfectly but it looks fine).
+We can fill the inside using another feature, the PF ("playfield", shown in purple), a sort of low resolution background. The playfield has to be symmetric so it's actually important that the circle is in the center (I don't think I did this pixel perfectly but it looks fine).
 
 That's two lookup tables in the ROM, one for the small movements of the missiles and one for the size of the playfield. I filled these by [drawing a circle in GIMP](https://www.wikihow.com/Draw-a-Circle-in-Gimp) and manually counting pixels and filling it up with squares. Of course it's slightly wrong. But you can't tell!
 
@@ -32,18 +35,18 @@ resources used: [Stella Programmers Guide](https://www.alienbill.com/2600/101/do
 
 Featuring swedish lofi musician weatherday
 
-Requires discord.py lol nobody expected me to use python
+Requires discord.py lol nobody expected me to just use python
 
 ## round #71 (huffman code)
 [Link.](https://codeguessing.gay/71/#3)
 
 Compress a message using a [Huffman code](https://en.wikipedia.org/wiki/Huffman_coding). I used the canonical method with the priority queue. I did so in [fox32](https://github.com/fox32-arch), world's best fox-themed instruction set and graphical operating system. I didn't use any of the graphical stuff I just made it use the fox32 terminal for output.
 
-Watch it encode "this is an example of a huffman tree": (the tree generated in the wikipedia article isn't the same, but the length of the encodings of the letters is, that's what actually matters)
+Watch it encode "this is an example of a huffman tree" (the tree in the wikipedia article isn't the same, but the length of the encodings of the letters is, that's what actually matters):
 
-![](71/screenshot.png)
+![The output of the program on the fox32 desktop](71/screenshot.png)
 
-Here is a file called "action plan" that I found in the folder where i was doing everything:
+Here is a file called "action plan" that I found in the folder where I was doing everything:
 ```
 challenge: Huffman encoding of a string.
 We assume the string is ascii (0x01-0x7F) <- N=127 characters.
@@ -80,9 +83,9 @@ encoding:
     note that we need to keep the original buffer around
 ```
 
-It's kind of confusing because I wanted to do the encoding all in a single 128 word array. It kind of works out for half of the process but in the end i did use three vectors. I had to implement a [binary heap](https://en.wikipedia.org/wiki/Binary_heap) from scratch which was kind of fun.
+It's kind of confusing because I wanted to do the encoding all in a single 128 word array. It kind of works out except for the end. I had to implement a [binary heap](https://en.wikipedia.org/wiki/Binary_heap) from scratch which was kind of fun.
 
-You have to assemble the source with [fox32asm](https://github.com/fox32-arch/fox32asm/tree/665eaa98fad7fadc5cc9311a25ae85f2cae04274) and get the file into a disk using [ryfs](https://github.com/ry755/ryfs/tree/master) and run it with the [fox32 emulator](https://github.com/fox32-arch/fox32/tree/5d047492ca2fabab1f16f35977e6199b877b0884) with [fox32os](https://github.com/fox32-arch/fox32os/tree/d11a8314bf5349846896e6b16a9e261daccbb309) and [fox32rom](https://github.com/fox32-arch/fox32rom/tree/0911a258754edb015728450aebcd60d85e700db7). I don't know if it will break in newer versions so just in case i put the commit id in all those links.
+You have to assemble the source with [fox32asm](https://github.com/fox32-arch/fox32asm/tree/665eaa98fad7fadc5cc9311a25ae85f2cae04274) and get the file into a disk using [ryfs](https://github.com/ry755/ryfs/tree/master) and run it with the [fox32 emulator](https://github.com/fox32-arch/fox32/tree/5d047492ca2fabab1f16f35977e6199b877b0884) with [fox32os](https://github.com/fox32-arch/fox32os/tree/d11a8314bf5349846896e6b16a9e261daccbb309) and [fox32rom](https://github.com/fox32-arch/fox32rom/tree/0911a258754edb015728450aebcd60d85e700db7). The script puts in the disk a `huffwomn.fxf` that reads from the `input.txt` file. I don't know if it will break in newer versions so just in case I put the commit id in all those links.
 
 ## round #70 (finish this game)
 
@@ -96,7 +99,7 @@ One of many boring js submissions but it does say to "upload the scripts you use
 
 Behold txt.k world's best bad text editor. The code is beautiful and it supports all the keybinds you already expect. It has text selection and indenting support and saving (it closes and opens the file again) and Ctrl+F (which is really just "find next"). It uses an awful awk hack to make it run in raw mode.
 
-`simple. usable. extensible. pick all three.` With Ctrl+E it can run arbitrary code. this is a Feature, actually. here are some examples of things you can do,
+`simple. usable. extensible. pick all three.` With Ctrl+E it can run arbitrary code. this is a Feature, actually. Here are some examples of things you can do,
 ```
   TX:CS,"30;47m";SE:CS,"97;40m"
     / light mode
@@ -109,7 +112,7 @@ It can also work as a little REPL. You want the numbers from 1 to 100 split into
 
 ![txt.k running in kitty](62/screenshot.png)
 
-It is written in [ngn/k](https://codeberg.org/ngn/k), an open source implementation of [K](https://en.wikipedia.org/wiki/K_(programming_language)). The lack of real closures was less annoying than I expected. The awful error messages were more annoying than I expected. The bytecode limit was more annoying than I expected (there's a few functions there that are needlessly split up for that reason. though i guess it makes it more extensible)
+It is written in [ngn/k](https://codeberg.org/ngn/k), an open source implementation of [K](https://en.wikipedia.org/wiki/K_(programming_language)). The lack of real closures was less annoying than I expected. The awful error messages were more annoying than I expected. The bytecode limit was more annoying than I expected (there's a few functions there that are needlessly split up for that reason. though I guess it makes it more extensible)
 
 The clipboard is not the system clipboard it's just a variable called `clip`. It also has no undo or autosave. It also assumes everything is ASCII sorry
 
@@ -148,7 +151,7 @@ It is implemented in the [Uxntal](https://wiki.xxiivv.com/site/uxntal.html) prog
 
 This also means it's slightly more of a pain to implement certain things. I was using Q7.8 fixed point and the lack of overflow checking or 32 bit multiplication really hurts I don't think it's right at all. I then did cos from a few terms of the Taylor series and then did some dubious math and somehow it worked out
 
-The very first bit that I wrote is the [Bresenham line algorithm](https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm) implementation and it looks so awful. I was juggling way too many values in the stack
+The very first bit that I wrote is the [Bresenham line algorithm](https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm) implementation and it looks so awful. I was juggling way too many values in the stack. There's a specific angle where the line disappears completely
 
 ## round #53 (parse a box drawing)
 
@@ -167,179 +170,17 @@ As first uploaded this four-byte file was automatically detected as Big5 reading
 How did "owo" know?
 
 ## round #51 (do the impossible)
-
 [Link.](https://codeguessing.gay/51/#3)
-This one features length calculations in 24 languages, with Statistical Analysis on top. Indeed! Mean, standard deviation, median, mode. Not just 24 random languages, just some i thought guessers would like. I strategically chose those languages: most say the number of bytes or unicode codepoints, JS because it does UTF-16, Elixir because I know it checks for graphemes, a dumb brainfuck implementation that lets the result overflow. PHP spins up a server and then returns the HTTP_CONTENT_LENGTH header. A shell script `run` and a `shell.nix` glue the whole thing together. The result is kind of chaotic.
 
-```
-[nix-shell:~/pp/haskell/cash/.vscode/cg]$ ./run meow×ä🐝
-+ jq -R '[0,0,0,.]'
-++ head -c 9 length.apls
-+ curl -vL https://tryapl.org/Exec --json @-
-+ jq -r '.[-1][0]'
-++ echo meow×ä🐝
-++ sed -E 's/'\''/'\'''\''/'
-+ echo '⎕←≢'\''meow×ä🐝'\'''
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Host tryapl.org:443 was resolved.
-* IPv6: (none)
-* IPv4: 81.94.205.37
-*   Trying 81.94.205.37:443...
-* Connected to tryapl.org (81.94.205.37) port 443
-* ALPN: curl offers h2,http/1.1
-} [5 bytes data]
-* TLSv1.3 (OUT), TLS handshake, Client hello (1):
-} [512 bytes data]
-* TLSv1.3 (IN), TLS handshake, Server hello (2):
-{ [122 bytes data]
-* TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
-{ [15 bytes data]
-* TLSv1.3 (IN), TLS handshake, Certificate (11):
-{ [4280 bytes data]
-* TLSv1.3 (IN), TLS handshake, CERT verify (15):
-{ [520 bytes data]
-* TLSv1.3 (IN), TLS handshake, Finished (20):
-{ [52 bytes data]
-* TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
-} [1 bytes data]
-* TLSv1.3 (OUT), TLS handshake, Finished (20):
-} [52 bytes data]
-* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384 / X25519 / RSASSA-PSS
-* ALPN: server accepted h2
-* Server certificate:
-*  subject: CN=tryapl.gos.dyalog.com
-*  start date: Dec 13 14:01:59 2023 GMT
-*  expire date: Mar 12 14:01:58 2024 GMT
-*  subjectAltName: host "tryapl.org" matched cert's "tryapl.org"
-*  issuer: C=US; O=Let's Encrypt; CN=R3
-*  SSL certificate verify ok.
-*   Certificate level 0: Public key type RSA (4096/152 Bits/secBits), signed using sha256WithRSAEncryption
-*   Certificate level 1: Public key type RSA (2048/112 Bits/secBits), signed using sha256WithRSAEncryption
-*   Certificate level 2: Public key type RSA (4096/152 Bits/secBits), signed using sha256WithRSAEncryption
-{ [5 bytes data]
-* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
-{ [146 bytes data]
-* using HTTP/2
-* [HTTP/2] [1] OPENED stream for https://tryapl.org/Exec
-* [HTTP/2] [1] [:method: POST]
-* [HTTP/2] [1] [:scheme: https]
-* [HTTP/2] [1] [:authority: tryapl.org]
-* [HTTP/2] [1] [:path: /Exec]
-* [HTTP/2] [1] [user-agent: curl/8.5.0]
-* [HTTP/2] [1] [content-type: application/json]
-* [HTTP/2] [1] [accept: application/json]
-* [HTTP/2] [1] [content-length: 48]
-} [5 bytes data]
-> POST /Exec HTTP/2
-> Host: tryapl.org
-> User-Agent: curl/8.5.0
-> Content-Type: application/json
-> Accept: application/json
-> Content-Length: 48
-> 
-} [48 bytes data]
-< HTTP/2 200 
-< content-type: application/json; charset=utf-8
-< date: Tue, 30 Jan 2024 17:44:36 GMT
-< server: Jarvis 1.14.5
-< content-length: 4576
-< 
-{ [5 bytes data]
-100  4624  100  4576  100    48   9268     97 --:--:-- --:--:-- --:--:--  9379
-* Connection #0 to host tryapl.org left intact
-8
-+ awk -E length.awk meow×ä🐝
-8
-+ bfc length.b
-+ echo meow×ä🐝
-+ ./length
-13
-+ cbqn length.bqn meow×ä🐝
-8
-+ gcc length.c -o length
-+ ./length meow×ä🐝
-13
-+ sbcl --script length.clisp meow×ä🐝
-8
-+ g++ length.cpp -o length
-+ ./length meow×ä🐝
-13
-+ elixir length.ex meow×ä🐝
-7
-+ gforth length.forth meow×ä🐝
-13 
-+ go run length.go meow×ä🐝
-13
-+ ghc length.hs -o length
-[1 of 2] Compiling Main             ( length.hs, length.o )
-[2 of 2] Linking length [Objects changed]
-+ ./length meow×ä🐝
-8
-+ java length.java meow×ä🐝
-9
-+ node length.js meow×ä🐝
-9
-+ k length.k meow×ä🐝
-13
-+ lua length.lua meow×ä🐝
-13
-+ perl length.perl meow×ä🐝
-13
-+ sleep 1
-+ php -S localhost:8000
-[Tue Jan 30 18:45:06 2024] PHP 8.3.2 Development Server (http://localhost:8000) started
-+ curl -v http://localhost:8000/length.php -d meow×ä🐝
-* Host localhost:8000 was resolved.
-* IPv6: ::1
-* IPv4: 127.0.0.1
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying [::1]:8000...
-* Connected to localhost (::1) port 8000
-> POST /length.php HTTP/1.1
-> Host: localhost:8000
-> User-Agent: curl/8.5.0
-> Accept: */*
-> Content-Length: 13
-> Content-Type: application/x-www-form-urlencoded
-> 
-} [13 bytes data]
-[Tue Jan 30 18:45:07 2024] [::1]:45272 Accepted
-< HTTP/1.1 200 OK
-< Host: localhost:8000
-< Date: Tue, 30 Jan 2024 17:45:07 GMT
-< Connection: close
-< X-Powered-By: PHP/8.3.2
-< Content-type: text/html; charset=UTF-8
-< 
-{ [3 bytes data]
-[Tue Jan 30 18:45:07 2024] [::1]:45272 [200]: POST /length.php
-[Tue Jan 30 18:45:07 2024] [::1]:45272 Closing
-100    16    0     3  100    13    118    513 --:--:-- --:--:-- --:--:--   640
-* Closing connection
-13
-+ kill 36301
-+ python3 length.py meow×ä🐝
-8
-+ ruby length.rb meow×ä🐝
-8
-+ rustc length.rs -o length
-+ ./length meow×ä🐝
-13
-+ scala length.scala meow×ä🐝
-9
-+ sh length.sh meow×ä🐝
-8
-+ zig run length.zig -- meow×ä🐝
-13
-+ rm length.hi length.o length
----
-data: 8 8 13 8 13 8 13 7 13  13 8 9 9 13 13 13 13 8 8 13 9 8 13 
-entries       μ      σ  median  mode
-     23  10.478  3.625       9  13
-```
-That space in the middle is because forth `.` does that by default. Try giving it strange or invalid encodings. Much fun to be had.
+The impossible is "calculate the length of a string".
+
+This one features length calculations in 24 programming languages, with Statistical Analysis on top. Indeed! Mean, standard deviation, median, mode, all the goods. It's not just 24 random languages, just some I thought guessers would like.
+
+Most of them say the number of bytes or unicode codepoints, but [JS](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/length) does UTF-16, [Elixir](https://hexdocs.pm/elixir/1.12/String.html#length/1) checks for graphemes, and there's also a dumb brainfuck implementation that lets the result overflow. Oh and PHP spins up a server to curl to and then returns the HTTP_CONTENT_LENGTH header. A shell script `run` and a `shell.nix` glue the whole thing together and you can see all the languages getting called. Try giving it strange or invalid encodings. Much fun to be had.
+
+I should've had something that checks actual length, like rendering the text and measuring how many ems it takes up
+
+All the math is in bash and dc. I didn't notice until deep in the guessing stage that the standard deviation was rounding the results so I sent a patch and it actually got fixed I'm not sure if that's happened very often
 
 ## round #50 (implement autocomplete)
 [Link.](https://codeguessing.gay/50/#1)
@@ -359,7 +200,7 @@ This entry is written in [Dyalog APL](https://dyalog.com/). It has a bunch of st
 
 The rest of the submission is my unfinished approach to implement a game solving algorithm based on Victor Allis [*A Knowledge-based Approach of Connect-Four*](https://rmarcus.info/blog/assets/conn4/thesis.pdf) (1988). There they make a bot called VICTOR that can always(!) win if playing first. I think this was exciting in the 80's.
 
-By spotting certain patterns in the grid you can identify threats or forced wins which can then be used with some search algorithm. The patterns are things that are fun to implement in array languages like "two vertical empty squares where the above is an odd column" (see "claimeven", "baseeven", "oddthreat"). There are also graph adjacency matrices involved and things like that.
+By spotting certain patterns in the grid you can identify threats or forced wins which can then be used with some search algorithm. The patterns are things that are fun to implement in array languages like "two vertical empty squares where the above is an odd column" (see "claimeven", "baseeven", "oddthreat"). There are also graph adjacency matrices involved and restrictions on how the rules can interact and things like that.
 
 I still want to finish it! There's a few rules that I didn't implement and also the whole game tree search thing is completely wrong (I tried to figure out some minimax with alpha-beta pruning but it was way too late). I still think it's a cool idea.
 
